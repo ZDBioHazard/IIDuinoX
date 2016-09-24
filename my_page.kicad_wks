@@ -1,0 +1,31 @@
+(page_layout
+  (setup
+    (textsize 1.27 1.27)(linewidth 0.2)(textlinewidth 0.2)
+    (left_margin 10.16)(right_margin 10.16)(top_margin 10.16)(bottom_margin 10.16)
+  )
+  (rect (name rect1:Rect) (start 0 0 ltcorner) (end 0 0) (repeat 2) (incrx 2.54) (incry 2.54))
+  (rect (name rect2:Rect) (start 78.74 17.78) (end 2.54 2.54))
+
+  (line (name segm1:Line) (start 2.54 2.54 ltcorner) (end 2.54 0 ltcorner) (repeat 20) (incrx 25.4))
+  (tbtext 1 (name text1:Text) (pos 15.24 1.27 ltcorner) (justify center) (repeat 20) (incrx 25.4))
+
+  (line (name segm2:Line) (start 2.54 2.54 lbcorner) (end 2.54 0 lbcorner) (repeat 20) (incrx 25.4))
+  (tbtext 1 (name text2:Text) (pos 15.24 1.27 lbcorner) (justify center) (repeat 50) (incrx 25.4))
+
+  (line (name segm3:Line) (start 0 2.54 ltcorner) (end 2.54 2.54 ltcorner) (repeat 20) (incry 25.4))
+  (tbtext A (name text3:Text) (pos 1.27 15.54 ltcorner) (rotate 90) (justify center) (repeat 20) (incry 25.4))
+
+  (line (name segm4:Line) (start 0 2.54 rtcorner) (end 2.54 2.54 rtcorner) (repeat 20) (incry 25.4))
+  (tbtext A (name text4:Text) (pos 1.27 15.24 rtcorner) (rotate -90) (justify center) (repeat 20) (incry 25.4))
+
+  (line (name segm5:Line) (start 78.74 12.7) (end 2.54 12.7))
+  (line (name segm6:Line) (start 78.74 7.62) (end 2.54 7.62))
+  (line (name segm7:Line) (start 40.64 12.7) (end 40.64 7.62))
+  (line (name segm8:Line) (start 21.59 7.62) (end 21.59 2.54))
+
+  (tbtext "Title: %T" (name text5:Text) (pos 77.47 15.24) (font (size 2 2)))
+  (tbtext "Date: %D" (name text6:Text) (pos 77.47 10.16) (font (size 2 2)))
+  (tbtext "Rev: %R" (name text7:Text) (pos 39.37 10.16) (font (size 2 2)))
+  (tbtext "%K" (name text8:Text) (pos 77.47 5.08) (font (size 2 2)))
+  (tbtext "Id: %S/%N" (name text9:Text) (pos 20.32 5.08) (font (size 2 2)))
+)
