@@ -9,6 +9,7 @@
 
 #define TT_THRESHOLD 24
 #define TT_TIMEOUT 300
+#define TT_DEBOUNCE 4
 #define PIN_TT_PRIMARY 2
 #define PIN_TT_SECONDARY 3
 #define KEY_TT_UP 'q'
@@ -27,6 +28,7 @@ const uint8_t keys_keys[] = {'z', 's', 'x', 'd', 'c', 'f', 'v', 'w', 'e'};
 
 volatile int8_t tt_pos = 0;
 volatile int8_t tt_flipflop = 0;
+volatile int8_t tt_debounce = 0;
 
 // ---------------------------------------------------------------------------
 
@@ -61,6 +63,10 @@ void read_turntable( void ) {
     //         some kind of velocity detection algorithm?
     static volatile uint8_t tt_pressed = 0;
     static volatile uint16_t tt_ticks = 0;
+
+    if ( tt_debounce > 0 ) {
+        tt_debounce--;
+    }
 
     if ( tt_pos > TT_THRESHOLD || tt_pos < -TT_THRESHOLD ) {
         uint8_t tt_new_key = ( tt_pos > 0 ) ? KEY_TT_UP : KEY_TT_DOWN;
@@ -106,7 +112,7 @@ void startup_animation( void ) {
 // ---------------------------------------------------------------------------
 
 void tt_interrupt_one( void ) {
-    if ( tt_flipflop == KEY_TT_UP ) {
+    if ( tt_debounce != 0 || tt_flipflop == KEY_TT_UP ) {
         return;
     }
 
@@ -117,10 +123,11 @@ void tt_interrupt_one( void ) {
     }
 
     tt_flipflop = KEY_TT_UP;
+    tt_debounce = TT_DEBOUNCE;
 }
 
 void tt_interrupt_two( void ) {
-    if ( tt_flipflop == KEY_TT_DOWN ) {
+    if ( tt_debounce != 0 || tt_flipflop == KEY_TT_DOWN ) {
         return;
     }
 
@@ -131,6 +138,7 @@ void tt_interrupt_two( void ) {
     }
 
     tt_flipflop = KEY_TT_DOWN;
+    tt_debounce = TT_DEBOUNCE;
 }
 
 // ---------------------------------------------------------------------------
