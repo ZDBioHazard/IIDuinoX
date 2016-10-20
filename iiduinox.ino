@@ -3,13 +3,13 @@
 
 // ---------------------------------------------------------------------------
 
-#define KEY_ANIMATION_RATE 75
-#define KEYS_SCAN_RATE 250
-#define KEYS_MASK 0xFF
+#define KEY_ANIMATION_RATE 75 // 75ms per key.
+#define KEYS_SCAN_RATE 250    // 250us per scan.
+#define KEYS_MASK 0xFF        // 8 bits == >=2ms key latency.
 
-#define TT_THRESHOLD 24
-#define TT_TIMEOUT 300
-#define TT_DEBOUNCE 4
+#define TT_THRESHOLD 16       // ~11 degrees.
+#define TT_TIMEOUT 800        // 200ms TT cooldown.
+#define TT_DEBOUNCE 4         // >=1ms per tick == >=16ms TT latency.
 #define PIN_TT_PRIMARY 2
 #define PIN_TT_SECONDARY 3
 #define KEY_TT_UP 'q'
@@ -72,14 +72,15 @@ void read_turntable( void ) {
         uint8_t tt_new_key = ( tt_pos > 0 ) ? KEY_TT_UP : KEY_TT_DOWN;
 
         if ( tt_pressed != tt_new_key ) {
-            NKROKeyboard.press(tt_new_key);
             if ( tt_pressed ) {
                 NKROKeyboard.release(tt_pressed);
             }
+            NKROKeyboard.press(tt_new_key);
             tt_pressed = tt_new_key;
         }
         tt_ticks = 0;
         tt_pos = 0;
+        return;
     }
 
     // Release the turntable key on timeout.
@@ -91,6 +92,7 @@ void read_turntable( void ) {
         } else {
             tt_ticks++;
         }
+        return;
     }
 }
 
@@ -112,6 +114,8 @@ void startup_animation( void ) {
 // ---------------------------------------------------------------------------
 
 void tt_interrupt_one( void ) {
+    noInterrupts();
+
     if ( tt_debounce != 0 || tt_flipflop == KEY_TT_UP ) {
         return;
     }
@@ -124,9 +128,13 @@ void tt_interrupt_one( void ) {
 
     tt_flipflop = KEY_TT_UP;
     tt_debounce = TT_DEBOUNCE;
+
+    interrupts();
 }
 
 void tt_interrupt_two( void ) {
+    noInterrupts();
+
     if ( tt_debounce != 0 || tt_flipflop == KEY_TT_DOWN ) {
         return;
     }
@@ -139,6 +147,8 @@ void tt_interrupt_two( void ) {
 
     tt_flipflop = KEY_TT_DOWN;
     tt_debounce = TT_DEBOUNCE;
+
+    interrupts();
 }
 
 // ---------------------------------------------------------------------------
